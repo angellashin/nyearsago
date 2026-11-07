@@ -1,0 +1,10 @@
+{
+  "name": "ny-years-ago-today",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "data:import": "python3 scripts/extract_xlsx.py",
+    "data:check": "python3 scripts/validate_data.py",
+    "build": "npm run data:import && npm run data:check"
+  }
+}

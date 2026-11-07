@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');
+const {weekIndex,current,complete}=require('../streak.js');
+const d=(y,m,day)=>new Date(y,m-1,day);
+const sat=d(2026,11,7), sun=d(2026,11,8);
+assert.equal(weekIndex(sun)-weekIndex(sat),1);
+assert.equal(weekIndex(d(2027,1,2)),weekIndex(d(2026,12,27)));
+assert.equal(current(null,sat),0);
+let r=complete(null,sat);assert.equal(r.count,1);
+assert.deepEqual(complete(r,sat),r);
+assert.equal(current(r,sun),1);
+r=complete(r,sun);assert.equal(r.count,2);
+assert.equal(current(r,d(2026,11,22)),0);
+assert.equal(complete(r,d(2026,11,22)).count,1);
+assert.equal(current({week:weekIndex(sat),count:-1},sat),0);
+console.log('PASS: weekly streak boundary, repeat, consecutive, gap and year rollover');

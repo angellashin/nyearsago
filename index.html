@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fdfdfc">
+  <meta name="description" content="오늘 날짜에 있었던 이야기를 발견하세요.">
+  <title>N년전오늘 — 오늘의 이야기</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/star.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
+  <link rel="stylesheet" href="styles.css?v=20261107-18">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="N년전오늘 홈">
+        <svg class="brand-star" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5 L28.4 13.6 L37.5 9.5 L34 18.4 L43 22.5 L34 26 L37.5 35.5 L28 32 L24 42 L19.5 33 L10 36.5 L13.7 27 L4 23 L13.5 19 L10.5 10 L19.5 13.8 Z" fill="#f36a32" stroke="#f36a32" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="19.9" cy="23.4" rx="3.9" ry="5.3" fill="#fff"/><ellipse cx="28.4" cy="22.6" rx="3.9" ry="5.3" fill="#fff"/><ellipse cx="20.8" cy="24.2" rx="1.65" ry="2.7" fill="#263238"/><ellipse cx="29.3" cy="23.4" rx="1.65" ry="2.7" fill="#263238"/></svg>
+        <span>N년전오늘</span>
+      </a>
+      <div class="streak-badge" id="streakBadge" role="status" aria-label="연속 퀴즈 0주"><img class="streak-flame" src="images/streak-flame.png" alt="" width="40" height="40"><strong id="streakCount">0</strong><span>주</span></div>
+    </header>
+
+    <main id="main">
+      <section id="homeView" class="view active">
+        <div class="home-intro">
+          <div><h1 id="homeDate">오늘의 이야기</h1></div>
+          <button class="round-button" id="calendarShortcut" aria-label="달력 열기"><svg class="shortcut-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M7.5 3.5v4M16.5 3.5v4M3.5 10h17M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></button>
+        </div>
+        <article id="heroCard" class="hero-card"></article>
+        <section id="weeklyQuizEntry" class="weekly-quiz-entry"></section>
+        <section class="below-fold">
+          <div class="section-heading"><div><h2>이 날짜의 다른 사건</h2></div><span id="eventCount" class="count-label"></span></div>
+          <div id="moreEvents" class="event-list"></div>
+        </section>
+      </section>
+
+      <section id="quizView" class="view"><button class="back-button" data-back>← <span>뒤로</span></button><div id="quizContent"></div></section>
+
+      <section id="storyView" class="view">
+        <button class="back-button" data-back>← <span>오늘</span></button>
+        <article id="storyArticle" class="story-article"></article>
+      </section>
+
+      <section id="calendarView" class="view">
+        <div class="section-heading calendar-heading"><div><p class="eyebrow">EXPLORE BY DATE</p><h1>달력</h1></div></div>
+        <div class="month-controls"><button class="icon-button" id="prevMonth" aria-label="이전 달">‹</button><h2 id="monthLabel"></h2><button class="icon-button" id="nextMonth" aria-label="다음 달">›</button></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div id="calendarPreview" class="calendar-preview"></div>
+      </section>
+
+      <section id="savedView" class="view">
+        <div class="section-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h1>저장한 이야기</h1></div></div>
+        <div id="savedList" class="saved-list"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="주요 메뉴">
+      <button class="nav-item selected" data-view="homeView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7v9a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg><span>오늘</span></button>
+      <button class="nav-item" data-view="calendarView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M7.5 3.5v4M16.5 3.5v4M3.5 10h17"/><circle cx="8" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="8" cy="17.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="17.5" r=".9" fill="currentColor" stroke="none"/></svg><span>달력</span></button>
+      <button class="nav-item" data-view="quizView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v12A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18V6A1.5 1.5 0 0 1 5 4.5Z"/><path d="M9.5 10a2.5 2.5 0 1 1 4.1 1.9c-.9.7-1.6 1.1-1.6 2.1M12 16.7h.01"/></svg><span>퀴즈</span></button>
+      <button class="nav-item" data-view="savedView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5v16l-6-4-6 4z"/><path d="M10 8.5h4"/></svg><span>저장</span></button>
+    </nav>
+  </div>
+  <script src="data/events.js"></script>
+  <script src="streak.js?v=1"></script>
+  <script src="app.js?v=20261107-19"></script>
+  <script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js"));</script>
+</body>
+</html>
