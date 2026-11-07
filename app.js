@@ -12,6 +12,7 @@
   let currentEvent = null;
   let saved = new Set(JSON.parse(localStorage.getItem("nyearsago:saved") || "[]"));
   const $ = id => document.getElementById(id);
+  if (new URLSearchParams(location.search).has("dev")) $("developerWidgetLink").hidden = false;
   const fmtDate = (m,d) => `${m}월 ${d}일`;
   const getDay = (m,d) => dateMap.get(key(m,d)) || dateMap.get("02-28");
   const featured = (m,d) => topStories(getDay(m,d).events)[0];
@@ -118,7 +119,7 @@
   function renderHome() {
     quizEntry();
     const month=today.getMonth()+1, dayNumber=today.getDate(), day=getDay(month,dayNumber), stories=topStories(day.events), e=stories[0], ago=yearsAgo(e);
-    $("homeDate").innerHTML=`${fmtDate(month,dayNumber)} <span>${ago===null?"":`· ${ago}년 전 오늘`}</span>`;
+    $("homeDate").innerHTML=`${fmtDate(month,dayNumber)} <span>${ago===null?"":`${ago}년 전 오늘`}</span>`;
     $("heroCard").innerHTML=`<div class="hero-art">${illustration(e)}</div><div class="hero-content"><h2>${esc(e.title)}</h2><p>${esc(e.summary||"이야기를 준비하고 있습니다.")}</p><div class="hero-footer"><button class="primary-button" id="readStory">이야기 읽기 <span aria-hidden="true">→</span></button><div class="date-line"><strong>${e.year||"연도 미상"}</strong><span>·</span><span>${esc(e.category)}</span></div></div></div>`;
     $("readStory").onclick=()=>openStory(e);
 
