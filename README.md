@@ -14,4 +14,4 @@ The UI selects up to three events per date by predicted interest grade, retainin
 
 ## Scope
 
-Today, story detail, month calendar, saved stories (local storage), Monday–Sunday weekly quiz and streak, a static PWA shell, colored install icon, social preview, and a small/medium web widget preview at `/widget.html`. Native iOS/Android home-screen widgets require an app extension and are not included; CMS, accounts, and production-ready 366 story illustrations are also not included.
+Today, story detail, month calendar, saved stories (local storage), Monday–Sunday weekly quiz and streak, a static PWA shell, colored install icon, social preview, and a **developer-only** small/medium app-widget design preview at `/widget.html` (not linked from the home screen). Native iOS/Android home-screen widgets require an app extension and are not included; CMS, accounts, and production-ready 366 story illustrations are also not included.
