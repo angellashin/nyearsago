@@ -108,8 +108,8 @@
   function renderHome() {
     quizEntry();
     const e=featured(selected.month,selected.day), ago=yearsAgo(e), day=getDay(selected.month,selected.day);
-    $("homeDate").innerHTML=`${fmtDate(selected.month,selected.day)} <span>${ago===null?"":`· ${ago}년 전`}</span>`;
-    $("heroCard").innerHTML=`<div class="hero-art">${illustration(e)}</div><div class="hero-content"><div class="years-heading">${ago===null?"":`${ago}년 전 오늘`}</div><h2>${esc(e.title)}</h2><p>${esc(e.summary||"이야기를 준비하고 있습니다.")}</p><div class="hero-footer"><button class="primary-button" id="readStory">이야기 읽기 <span aria-hidden="true">→</span></button><div class="date-line"><strong>${e.year||"연도 미상"}</strong><span>·</span><span>${esc(e.category)}</span></div></div></div>`;
+    $("homeDate").innerHTML=`${fmtDate(selected.month,selected.day)} <span>${ago===null?"":`· ${ago}년 전 오늘`}</span>`;
+    $("heroCard").innerHTML=`<div class="hero-art">${illustration(e)}</div><div class="hero-content"><h2>${esc(e.title)}</h2><p>${esc(e.summary||"이야기를 준비하고 있습니다.")}</p><div class="hero-footer"><button class="primary-button" id="readStory">이야기 읽기 <span aria-hidden="true">→</span></button><div class="date-line"><strong>${e.year||"연도 미상"}</strong><span>·</span><span>${esc(e.category)}</span></div></div></div>`;
     $("readStory").onclick=()=>openStory(e);
 
     const others=day.events.filter(x=>x.id!==e.id).slice(0,5);

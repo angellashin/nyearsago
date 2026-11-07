@@ -160,3 +160,4 @@
 .hero-footer { display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 .hero-content .date-line { position:static; flex:0 0 auto; }
 .hero-content .years-heading { padding-right:0; }
+.home-intro h1 span { color:var(--orange-dark); font-weight:650; }
