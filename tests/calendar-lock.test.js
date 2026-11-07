@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict');
+const {isLockedDate}=require('../calendar-lock');
+const today=new Date(2026,10,8);
+assert.equal(isLockedDate(11,7,today),false);
+assert.equal(isLockedDate(11,8,today),false);
+assert.equal(isLockedDate(11,9,today),true);
+assert.equal(isLockedDate(11,30,today),true);
+assert.equal(isLockedDate(12,1,today),true);
+assert.equal(isLockedDate(1,1,today),false);
+console.log('PASS: calendar lock boundary and future month');

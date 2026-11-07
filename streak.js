@@ -1,6 +1,6 @@
-/* Weekly streaks use Sunday–Saturday, based on the app's Korean calendar date. */
+/* Weekly streaks use Monday–Sunday, based on the app's Korean calendar date. */
 (function(root) {
-  function weekIndex(date) { return Math.floor((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()) / 86400000 + 4) / 7); }
+  function weekIndex(date) { return Math.floor((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()) / 86400000 + 3) / 7); }
   function current(record,date) {
     const week=weekIndex(date);
     if (!record || !Number.isInteger(record.week) || !Number.isInteger(record.count) || record.count<1) return 0;

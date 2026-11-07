@@ -5,12 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fdfdfc">
   <meta name="description" content="오늘 날짜에 있었던 이야기를 발견하세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="N년전오늘">
+  <meta property="og:url" content="https://nyearsago-history.mobilejet4.chatgpt.site/">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="N년전오늘 — 오늘의 이야기">
+  <meta property="og:description" content="오늘 날짜에 숨어 있던 흥미로운 이야기를 만나보세요.">
+  <meta property="og:image" content="https://nyearsago-history.mobilejet4.chatgpt.site/images/share-preview.jpg">
+  <meta property="og:image:width" content="1734">
+  <meta property="og:image:height" content="907">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://nyearsago-history.mobilejet4.chatgpt.site/images/share-preview.jpg">
   <title>N년전오늘 — 오늘의 이야기</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/star.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
-  <link rel="stylesheet" href="styles.css?v=20261107-20">
+  <link rel="stylesheet" href="styles.css?v=20261108-5">
 </head>
 <body>
   <div class="app-shell">
@@ -34,6 +46,7 @@
           <div class="section-heading"><div><h2>이 날짜의 다른 사건</h2></div><span id="eventCount" class="count-label"></span></div>
           <div id="moreEvents" class="event-list"></div>
         </section>
+        <a class="widget-preview-link" href="/widget.html"><img src="images/app-icon-192.png" alt="" width="36" height="36"><span>오늘의 이야기를 작은 카드로 보기</span><span aria-hidden="true">↗</span></a>
       </section>
 
       <section id="quizView" class="view"><button class="back-button" data-back>← <span>뒤로</span></button><div id="quizContent"></div></section>
@@ -44,28 +57,34 @@
       </section>
 
       <section id="calendarView" class="view">
-        <div class="section-heading calendar-heading"><div><p class="eyebrow">EXPLORE BY DATE</p><h1>달력</h1></div></div>
+        <div class="section-heading calendar-heading"><div><h1>달력</h1></div></div>
         <div class="month-controls"><button class="icon-button" id="prevMonth" aria-label="이전 달">‹</button><h2 id="monthLabel"></h2><button class="icon-button" id="nextMonth" aria-label="다음 달">›</button></div>
         <div class="calendar-grid" id="calendarGrid"></div>
+        <p class="calendar-lock-hint"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg> 아직 오지 않은 날의 이야기는 공개 전이에요</p>
         <div id="calendarPreview" class="calendar-preview"></div>
       </section>
 
       <section id="savedView" class="view">
-        <div class="section-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h1>저장한 이야기</h1></div></div>
+        <div class="section-heading"><div><h1>저장한 이야기</h1></div></div>
         <div id="savedList" class="saved-list"></div>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="주요 메뉴">
-      <button class="nav-item selected" data-view="homeView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7v9a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg><span>오늘</span></button>
-      <button class="nav-item" data-view="calendarView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M7.5 3.5v4M16.5 3.5v4M3.5 10h17"/><circle cx="8" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="8" cy="17.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="17.5" r=".9" fill="currentColor" stroke="none"/></svg><span>달력</span></button>
-      <button class="nav-item" data-view="quizView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v12A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18V6A1.5 1.5 0 0 1 5 4.5Z"/><path d="M9.5 10a2.5 2.5 0 1 1 4.1 1.9c-.9.7-1.6 1.1-1.6 2.1M12 16.7h.01"/></svg><span>퀴즈</span></button>
-      <button class="nav-item" data-view="savedView"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5v16l-6-4-6 4z"/><path d="M10 8.5h4"/></svg><span>저장</span></button>
+      <button class="nav-item selected" data-view="homeView" aria-current="page"><svg class="nav-icon" viewBox="0 0 28 28" aria-hidden="true"><path fill="currentColor" d="M14 2.2c1.3 0 1.9 3.1 3 3.7 1.2.7 3.8-.7 4.7.3.9 1-1.1 3.5-.9 4.7.2 1.1 3.3 2.1 3 3.4-.3 1.3-3.4 1.4-4.2 2.4-.8 1 0 3.9-1.1 4.6-1.2.7-3.2-1.8-4.4-1.8s-3.2 2.5-4.4 1.8c-1.1-.7-.3-3.6-1.1-4.6-.8-1-3.9-1.1-4.2-2.4-.3-1.3 2.8-2.3 3-3.4.2-1.2-1.8-3.7-.9-4.7.9-1 3.5.4 4.7-.3 1.1-.6 1.7-3.7 3-3.7Z"/></svg><span>오늘</span></button>
+      <button class="nav-item" data-view="calendarView"><svg class="nav-icon" viewBox="0 0 28 28" aria-hidden="true"><rect x="3.5" y="5.5" width="21" height="19" rx="4.5" fill="currentColor"/><path d="M8.5 4v4M19.5 4v4" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><rect x="6.4" y="11.3" width="15.2" height="10.4" rx="2" fill="#fff"/><rect x="9" y="13.9" width="4.2" height="4.2" rx="1.2" fill="currentColor"/><circle cx="18" cy="16" r="1.5" fill="currentColor"/></svg><span>달력</span></button>
+      <button class="nav-item" data-view="quizView"><svg class="nav-icon" viewBox="0 0 28 28" aria-hidden="true"><path d="M6.5 4h15A3.5 3.5 0 0 1 25 7.5v11a3.5 3.5 0 0 1-3.5 3.5H11l-5.3 2.9c-.8.4-1.7-.2-1.7-1.1V7.5A3.5 3.5 0 0 1 7.5 4Z" fill="currentColor"/><path d="M11.2 11a3.1 3.1 0 1 1 5.3 2.2c-1.1.9-2.4 1.2-2.4 2.7" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="14.1" cy="18.7" r="1.35" fill="#fff"/></svg><span>퀴즈</span></button>
+      <button class="nav-item" data-view="savedView"><svg class="nav-icon" viewBox="0 0 28 28" aria-hidden="true"><path d="M7.5 3.5h13A3.5 3.5 0 0 1 24 7v17.2c0 1.1-1.2 1.8-2.1 1.2L14 20.8l-7.9 4.6c-.9.6-2.1-.1-2.1-1.2V7a3.5 3.5 0 0 1 3.5-3.5Z" fill="currentColor"/><path d="m14 8.3 1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4L14 8.3Z" fill="#fff"/></svg><span>저장</span></button>
     </nav>
   </div>
   <script src="data/events.js"></script>
-  <script src="streak.js?v=1"></script>
-  <script src="app.js?v=20261107-20"></script>
+  <script src="data/november-research.js?v=20261108-1"></script>
+  <script src="streak.js?v=2"></script>
+  <script src="week-calendar.js?v=1"></script>
+  <script src="story-selection.js?v=1"></script>
+  <script src="illustration-map.js?v=1"></script>
+  <script src="calendar-lock.js?v=1"></script>
+  <script src="app.js?v=20261108-5"></script>
   <script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js"));</script>
 </body>
 </html>

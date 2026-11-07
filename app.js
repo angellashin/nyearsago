@@ -14,32 +14,16 @@
   const $ = id => document.getElementById(id);
   const fmtDate = (m,d) => `${m}월 ${d}일`;
   const getDay = (m,d) => dateMap.get(key(m,d)) || dateMap.get("02-28");
-  const featured = (m,d) => {
-    const day = getDay(m,d);
-    return day.events.find(e=>e.id===day.featuredId) || day.events[0];
-  };
+  const featured = (m,d) => topStories(getDay(m,d).events)[0];
   const yearsAgo = e => e.year ? today.getFullYear()-e.year : null;
   const esc = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-  function illustration(event, compact=false) {
-    const text = (event.title+" "+event.summary).toLowerCase();
-    if (event.month === 11 && event.day <= 7 && event.id.endsWith("-01")) {
-      const index = event.day - 1;
-      return `<div class="illustration-sprite" role="img" aria-label="${esc(event.title)} 일러스트" style="background-position:${index%2 ? 100 : 0}% ${Math.floor(index/2)*100/3}%"></div>`;
+  function illustration(event) {
+    const art=novemberArtwork(event);
+    if (art) {
+      return `<div class="illustration-sprite" role="img" aria-label="${esc(event.title)} 장면 일러스트" style="--art-url:url('${art.sheet}');background-position:${art.panel%2 ? 100 : 0}% ${Math.floor(art.panel/2)*100/3}%"></div>`;
     }
-    if (text.includes("타코마") || text.includes("다리 붕괴")) {
-      return `<svg viewBox="0 0 480 340" role="img" aria-label="바람에 흔들리는 현수교 일러스트" xmlns="http://www.w3.org/2000/svg">
-      <rect width="480" height="340" fill="#d9e2df"/><path d="M0 222 Q72 194 141 218T282 216T480 206V340H0Z" fill="#6c8794"/><path d="M0 252Q86 245 160 256T322 252T480 260" fill="none" stroke="#f4eee0" stroke-width="3"/>
-      <path d="M54 244V92M387 238V42" stroke="#f4eee0" stroke-width="13"/><path d="M54 93Q218 43 387 43" fill="none" stroke="#263a43" stroke-width="5"/><path d="M54 102Q210 59 387 52" fill="none" stroke="#263a43" stroke-width="3"/>
-      <path d="M54 98L96 214M98 88L132 216M144 77L168 220M194 67L205 224M245 59L244 229M294 52L281 225M341 47L319 221M387 43L357 221" fill="none" stroke="#263a43" stroke-width="1.8"/>
-      <path d="M43 217 Q112 208 171 216 Q220 225 269 214 Q326 202 399 208" fill="none" stroke="#f6f1e5" stroke-width="11" stroke-linecap="round"/><path d="M47 222 Q112 213 172 221 Q220 230 271 219 Q326 207 397 213" fill="none" stroke="#263a43" stroke-width="2"/>
-      <path d="M84 59q-22-18-43 0M111 39q-22-18-43 0M141 25q-22-18-43 0" fill="none" stroke="#fffaf0" stroke-width="4" stroke-linecap="round"/>
-      <path d="M329 286q32-8 62 0m-133 15q28-7 51 0" stroke="#cbd8d3" fill="none" stroke-width="3" stroke-linecap="round"/>
-      <path d="M29 286l10-24 10 24-10-6zM54 290l8-18 8 18-8-5z" fill="#ee5938"/><circle cx="39" cy="280" r="2" fill="#fff"/><circle cx="62" cy="283" r="2" fill="#fff"/>
-      </svg>`;
-    }
-    const palette = text.includes("스포츠") || text.includes("월드컵") ? ["#d7e1df","#ef5938","#425d69"] : ["#e8e2d6","#778b89","#ee5938"];
-    return `<svg viewBox="0 0 480 340" role="img" aria-label="${esc(event.title)}를 상징하는 일러스트" xmlns="http://www.w3.org/2000/svg"><rect width="480" height="340" fill="${palette[0]}"/><circle cx="345" cy="85" r="49" fill="#f2ead6"/><path d="M0 245Q82 202 166 235T335 222T480 221V340H0Z" fill="${palette[2]}" opacity=".84"/><path d="M0 271Q104 232 190 263T354 250T480 250V340H0Z" fill="${palette[1]}"/><path d="M72 224h150l21 34H55z" fill="#f6f1e5"/><path d="M108 184v40m73-40v40m-91 0h114" stroke="#273238" stroke-width="5"/><path d="M98 184q42-53 90 0" fill="none" stroke="#273238" stroke-width="3"/><path d="M285 204l15-34 14 34-14-9z" fill="#ee5938"/><circle cx="300" cy="188" r="2" fill="white"/><circle cx="310" cy="190" r="2" fill="white"/><path d="M385 285h44m-22-17v35" stroke="#f7f4ea" stroke-width="3"/><path d="M20 33l6-21 6 21 20 6-20 6-6 21-6-21-20-6z" fill="#ee5938" transform="translate(18 4) scale(.55)"/></svg>`;
+    return `<img class="story-placeholder" src="images/story-placeholder-bw.jpg?v=20261108-2" alt="점무늬 책 뒤에서 이야기를 살펴보는 흑백 별 캐릭터" loading="lazy">`;
   }
   let restoringHistory = false;
   let navigationDepth = 0;
@@ -54,7 +38,12 @@
       }
     }
     document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
-    document.querySelectorAll(".nav-item").forEach(v=>v.classList.toggle("selected",v.dataset.view===id));
+    document.querySelectorAll(".nav-item").forEach(v=>{
+      const isCurrent=v.dataset.view===id;
+      v.classList.toggle("selected",isCurrent);
+      if (isCurrent) v.setAttribute("aria-current","page");
+      else v.removeAttribute("aria-current");
+    });
     window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }
   function openStory(event) { currentEvent=event; $("storyArticle").innerHTML=storyHtml(event); activeView("storyView"); }
@@ -65,7 +54,8 @@
     {day:4, q:"투탕카멘 무덤의 입구로 이어진 첫 단서는?", choices:["바위에 파인 계단","사막 위의 비석","무덤을 그린 지도"], answer:0, explanation:"발굴팀은 왕가의 계곡에서 계단의 첫 단을 발견했어요."},
     {day:5, q:"화약 음모를 발견하는 계기가 된 것은?", choices:["의회에 가지 말라는 경고 편지","신문의 일기예보","왕의 생일 초대장"], answer:0, explanation:"익명의 경고 편지가 수색으로 이어졌고 화약이 발견됐어요."},
     {day:6, q:"1860년 미국 대통령으로 선출된 인물은?", choices:["조지 워싱턴","에이브러햄 링컨","프랭클린 루스벨트"], answer:1, explanation:"링컨은 1860년 미국의 제16대 대통령으로 선출됐어요."},
-    {day:7, q:"11월에 일어난 사건이 ‘10월혁명’인 이유는?", choices:["당시 러시아에서 쓰던 달력이 달라서","사건을 한 달 뒤에 발표해서","혁명이 10월 내내 계속돼서"], answer:0, explanation:"러시아가 당시 쓰던 율리우스력으로는 10월이었어요."}
+    {day:7, q:"11월에 일어난 사건이 ‘10월혁명’인 이유는?", choices:["당시 러시아에서 쓰던 달력이 달라서","사건을 한 달 뒤에 발표해서","혁명이 10월 내내 계속돼서"], answer:0, explanation:"러시아가 당시 쓰던 율리우스력으로는 10월이었어요."},
+    {day:8, q:"뢴트겐의 발견으로 절개 없이 몸속을 볼 수 있게 만든 것은?", choices:["X선","전파","자외선"], answer:0, explanation:"뢴트겐이 1895년 발견한 X선은 의료 영상 기술의 기반이 됐어요."}
   ];
   const streakKey="nyearsago:weekly-streak";
   function readStreak() { try { return JSON.parse(localStorage.getItem(streakKey) || "null"); } catch { return null; } }
@@ -73,7 +63,26 @@
   function completeStreak() { const record=WeeklyStreak.complete(readStreak(),today); try { localStorage.setItem(streakKey,JSON.stringify(record)); } catch { return; } renderStreak(); }
   let quizIndex=0, quizCorrect=0, quizAnswered=false;
   function availableQuestions() {
-    return today.getMonth()===10 && today.getDate()<=7 ? weeklyQuestions.filter(q=>q.day<=Math.min(today.getDate(),7)) : [];
+    const dates = WeeklyQuizWeek.elapsedWeekDates(today);
+    const weekStories = dates.map(date => ({...date, story:featured(date.month,date.day)}));
+    return weekStories.map(({month,day,story}) => {
+      const curated = month === 11 && weeklyQuestions.find(q => q.day === day);
+      if (curated) return curated;
+
+      // Keep even the fallback choices inside the current Monday–Sunday stories.
+      const sameDay = topStories(getDay(month,day).events).slice(1);
+      const candidates = [...weekStories.filter(item => item.story.id !== story.id).map(item => item.story), ...sameDay];
+      const choices = [story.title];
+      for (const candidate of candidates) {
+        if (choices.length === 3) break;
+        if (!choices.includes(candidate.title)) choices.push(candidate.title);
+      }
+      if (choices.length < 3) return null;
+      const answer = (month + day) % 3;
+      const correct = choices.shift();
+      choices.splice(answer,0,correct);
+      return {q:`${month}월 ${day}일의 대표 이야기는 무엇일까요?`, choices, answer, explanation:story.summary || `${story.title} 이야기였어요.`};
+    }).filter(Boolean);
   }
   const quizMascot = '<img class="quiz-mascot" src="images/quiz-mascot.png" alt="" width="170" height="114" loading="lazy">';
   function startQuiz() { quizIndex=0; quizCorrect=0; quizAnswered=false; renderQuiz(); activeView("quizView"); }
@@ -99,21 +108,22 @@
     "11-06-01": { paragraphs: ["1860년 11월 6일, 에이브러햄 링컨이 미국의 제16대 대통령으로 선출됐습니다. 당시 미국은 노예제와 그 확대를 둘러싸고 깊이 갈라져 있었습니다.", "선거 다음 달 사우스캐롤라이나가 연방에서 탈퇴했고, 다른 남부 주들도 뒤따랐습니다. 1861년 4월 포트섬터에서 교전이 시작되며 미국 남북전쟁이 발발했습니다."], source: "미국 의회도서관 · 남북전쟁 연표", url: "https://www.loc.gov/exhibits/civil-war-in-america/timeline.html" },
     "11-07-01": { paragraphs: ["1917년 11월, 러시아 수도 페트로그라드에서 볼셰비키 세력이 주요 시설을 장악하고 임시정부를 무너뜨렸습니다. 1차 세계대전과 정치적 혼란 속에서 일어난 이 사건은 러시아 혁명의 전환점이 됐습니다.", "11월에 일어났는데 왜 ‘10월혁명’일까요? 당시 러시아가 사용하던 율리우스력으로는 10월 24~25일이었기 때문입니다. 오늘날 쓰는 그레고리력으로는 11월 6~7일에 해당합니다."], source: "미국 홀로코스트 기념관 · 러시아 혁명", url: "https://encyclopedia.ushmm.org/content/en/article/the-russian-revolution-1917" }
   };
+  Object.assign(researchedStories, window.NOVEMBER_RESEARCH || {});
   function storyHtml(e) {
-    const m=selected.month,d=selected.day,ago=yearsAgo(e);
+    const m=e.month,d=e.day,ago=yearsAgo(e);
     const researched=researchedStories[e.id];
-    const paragraphs=researched?.paragraphs || (e.summary||"이야기를 준비하고 있습니다.").split(/(?<=[.!?다])\s+/).filter(Boolean);
+    const paragraphs=researched?.paragraphs || (researched?.detail ? [e.summary, researched.detail] : (e.summary||"이야기를 준비하고 있습니다.").split(/(?<=[.!?다])\s+/).filter(Boolean));
     return `<div class="story-meta">${fmtDate(m,d)} · ${ago===null?"연도 확인 필요":`${ago}년 전`} · ${esc(e.category)}</div><h1>${esc(e.title)}</h1><figure class="story-hero">${illustration(e)}</figure><p>${esc(paragraphs[0]||e.summary)}</p>${paragraphs.slice(1).map(p=>`<p>${esc(p)}</p>`).join("")}${researched?`<div class="source-note">출처 · <a href="${esc(researched.url)}" target="_blank" rel="noopener noreferrer">${esc(researched.source)} ↗</a></div>`:""}<div class="story-actions"><button class="secondary-button" data-save="${e.id}">${saved.has(e.id)?"저장됨 ✓":"이야기 저장"}</button><button class="secondary-button" data-share="${e.id}">공유</button></div>`;
   }
   function renderHome() {
     quizEntry();
-    const e=featured(selected.month,selected.day), ago=yearsAgo(e), day=getDay(selected.month,selected.day);
-    $("homeDate").innerHTML=`${fmtDate(selected.month,selected.day)} <span>${ago===null?"":`· ${ago}년 전 오늘`}</span>`;
+    const month=today.getMonth()+1, dayNumber=today.getDate(), day=getDay(month,dayNumber), stories=topStories(day.events), e=stories[0], ago=yearsAgo(e);
+    $("homeDate").innerHTML=`${fmtDate(month,dayNumber)} <span>${ago===null?"":`· ${ago}년 전 오늘`}</span>`;
     $("heroCard").innerHTML=`<div class="hero-art">${illustration(e)}</div><div class="hero-content"><h2>${esc(e.title)}</h2><p>${esc(e.summary||"이야기를 준비하고 있습니다.")}</p><div class="hero-footer"><button class="primary-button" id="readStory">이야기 읽기 <span aria-hidden="true">→</span></button><div class="date-line"><strong>${e.year||"연도 미상"}</strong><span>·</span><span>${esc(e.category)}</span></div></div></div>`;
     $("readStory").onclick=()=>openStory(e);
 
-    const others=day.events.filter(x=>x.id!==e.id).slice(0,5);
-    $("eventCount").textContent=`${day.events.length}개의 이야기`;
+    const others=stories.slice(1);
+    $("eventCount").textContent=`${others.length}개의 이야기`;
     $("moreEvents").innerHTML=others.map((x,i)=>`<button class="event-row" data-event="${x.id}"><span class="event-index">${String(i+2).padStart(2,"0")}</span><span><strong>${esc(x.title)}</strong><small>${x.year||"연도 미상"}</small></span><span class="event-arrow">→</span></button>`).join("")||'<p class="empty-state">다른 사건이 없습니다.</p>';
     $("moreEvents").querySelectorAll("[data-event]").forEach(b=>b.onclick=()=>openStory(eventMap.get(b.dataset.event)));
   }
@@ -125,21 +135,25 @@
     let html=labels.map(x=>`<div class="weekday">${x}</div>`).join("");
     for(let i=0;i<42;i++){
       const date=new Date(y,m-1,i-start+1), mm=date.getMonth()+1, dd=date.getDate(), valid=date.getMonth()===m-1;
-      const locked=date>today, isSel=valid&&mm===selected.month&&dd===selected.day, isToday=date.getTime()===today.getTime();
-      html+=`<button class="day-cell ${valid?"":"outside"} ${isSel?"selected":""} ${isToday?"today":""} ${locked?"locked":""}" data-date="${date.getFullYear()}-${mm}-${dd}" ${locked?'disabled aria-label="'+mm+'월 '+dd+'일 잠김"':''}>${dd}${locked?'<span class="lock-mark" aria-hidden="true"> ·</span>':''}</button>`;
+      const locked=isLockedDate(mm,dd,today);
+      const isSel=valid&&mm===selected.month&&dd===selected.day, isToday=date.getTime()===today.getTime();
+      const lockIcon='<svg class="lock-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>';
+      html+=`<button class="day-cell ${valid?"":"outside"} ${isSel?"selected":""} ${isToday?"today":""} ${locked?"locked":""}" data-date="${date.getFullYear()}-${mm}-${dd}" ${locked?'disabled aria-label="'+mm+'월 '+dd+'일, 아직 공개되지 않음"':''}><span class="day-number">${dd}</span>${locked?lockIcon:''}</button>`;
     }
     $("calendarGrid").innerHTML=html;
-    $("calendarGrid").querySelectorAll("[data-date]:not(:disabled)").forEach(b=>b.onclick=()=>{const [year,m0,d0]=b.dataset.date.split("-").map(Number);if(!dateMap.has(key(m0,d0)))return;selected={month:m0,day:d0};calendarMonth=new Date(year,m0-1,1);renderCalendar();renderHome();});
-    const e=featured(selected.month,selected.day);$("calendarPreview").innerHTML=`<p class="preview-label">${fmtDate(selected.month,selected.day)}의 이야기</p><button class="preview-card" id="previewOpen"><span><h3>${esc(e.title)}</h3><p>${e.year||"연도 미상"}</p></span><span class="event-arrow">→</span></button>`;
-    $("previewOpen").onclick=()=>openStory(e);
+    $("calendarGrid").querySelectorAll("[data-date]:not(:disabled)").forEach(b=>b.onclick=()=>{const [year,m0,d0]=b.dataset.date.split("-").map(Number);if(!dateMap.has(key(m0,d0)))return;selected={month:m0,day:d0};calendarMonth=new Date(year,m0-1,1);renderCalendar();});
+    if (selected.month !== m) { $("calendarPreview").innerHTML=""; return; }
+    const day=getDay(selected.month,selected.day), stories=topStories(day.events);
+    $("calendarPreview").innerHTML=`<p class="preview-label">${fmtDate(selected.month,selected.day)}의 이야기 · ${stories.length}개</p><div class="calendar-story-list">${stories.map(e=>`<button class="preview-card" data-calendar-event="${esc(e.id)}"><span><h3>${esc(e.title)}</h3><p>${e.year||"연도 미상"} · ${esc(e.category)}</p></span><span class="event-arrow" aria-hidden="true">→</span></button>`).join("")}</div>`;
+    $("calendarPreview").querySelectorAll("[data-calendar-event]").forEach(button=>button.onclick=()=>openStory(eventMap.get(button.dataset.calendarEvent)));
   }
   function renderSaved() {
     const items=[...saved].map(id=>eventMap.get(id)).filter(Boolean);
-    $("savedList").innerHTML=items.length?items.map(e=>`<article class="saved-card"><div class="saved-thumb">${illustration(e,true)}</div><div><h3>${esc(e.title)}</h3><p>${e.year||"연도 미상"}</p></div><button class="save-toggle" data-remove="${e.id}" aria-label="저장 취소">♥</button></article>`).join(""):'<p class="empty-state">아직 저장한 이야기가 없습니다.<br>마음에 드는 사건을 저장해 다시 읽어보세요.</p>';
+    $("savedList").innerHTML=items.length?items.map(e=>`<article class="saved-card"><div class="saved-thumb">${illustration(e)}</div><div><h3>${esc(e.title)}</h3><p>${e.year||"연도 미상"}</p></div><button class="save-toggle" data-remove="${e.id}" aria-label="저장 취소">♥</button></article>`).join(""):'<p class="empty-state">아직 저장한 이야기가 없습니다.<br>마음에 드는 사건을 저장해 다시 읽어보세요.</p>';
     $("savedList").querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>toggleSave(b.dataset.remove));
   }
   function toggleSave(id) { const wasSaved=saved.has(id); if(wasSaved)saved.delete(id);else saved.add(id); toast(wasSaved?"저장을 취소했어요.":"이야기를 저장했어요.");localStorage.setItem("nyearsago:saved",JSON.stringify([...saved]));renderSaved();if(currentEvent?.id===id)$("storyArticle").innerHTML=storyHtml(currentEvent); }
-  document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>{const id=b.dataset.view;if(id==="quizView"){startQuiz();return;}activeView(id);if(id==="calendarView")renderCalendar();if(id==="savedView")renderSaved();});
+  document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>{const id=b.dataset.view;if(id==="quizView"){startQuiz();return;}activeView(id);if(id==="homeView"){selected={month:today.getMonth()+1,day:today.getDate()};renderHome();}if(id==="calendarView")renderCalendar();if(id==="savedView")renderSaved();});
   $("calendarShortcut").onclick=()=>{calendarMonth=new Date(today.getFullYear(),selected.month-1,1);activeView("calendarView");renderCalendar();};
   $("prevMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);renderCalendar();};
   $("nextMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);renderCalendar();};

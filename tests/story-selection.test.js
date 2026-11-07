@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');
+const {topStories}=require('../story-selection');
+const events=[{id:'a',grade:3},{id:'b',grade:5},{id:'c',grade:5},{id:'d',grade:4},{id:'e',grade:5}];
+assert.deepEqual(topStories(events).map(x=>x.id),['b','c','e']);
+assert.deepEqual(events.map(x=>x.id),['a','b','c','d','e']);
+assert.deepEqual(topStories(events.slice(0,2)).map(x=>x.id),['b','a']);
+assert.deepEqual(topStories([]),[]);
+global.window={};require('../data/events.js');
+const day=window.EVENT_DATA.dates.find(x=>x.month===11&&x.day===7);
+assert.equal(topStories(day.events).length,3);
+console.log('PASS: top three, ties, source order, short days, November 7');

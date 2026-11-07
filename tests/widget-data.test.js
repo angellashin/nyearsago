@@ -1,0 +1,11 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const context = {window:{}};
+vm.runInNewContext(fs.readFileSync(require('node:path').join(__dirname,'../data/widget-daily.js'),'utf8'),context);
+const daily = context.window.WIDGET_DAILY;
+assert.equal(Object.keys(daily).length,366);
+assert.equal(daily['11-08'].id,'11-08-01');
+assert.ok(daily['11-08'].title.includes('X선'));
+assert.ok(Object.values(daily).every(item=>item.id && item.title));
+console.log('PASS: compact widget data contains a featured story for every calendar date');

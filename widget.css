@@ -1,0 +1,41 @@
+:root { --ink:#202322; --muted:#68746e; --orange:#bf4024; --line:#e2e5df; --paper:#fdfdfc; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo",sans-serif; -webkit-font-smoothing:antialiased; }
+.widget-page { max-width:970px; padding:28px 28px 72px; margin:auto; }
+.widget-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; border-bottom:1px solid var(--line); }
+.widget-brand { display:inline-flex; align-items:center; gap:5px; color:var(--ink); font-size:19px; font-weight:750; letter-spacing:-.04em; text-decoration:none; }
+.widget-brand img { object-fit:contain; }
+.widget-back { color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; }
+.widget-back:hover { color:var(--orange); }
+.widget-intro { margin:56px 0 38px; }
+.widget-intro p { margin:0 0 9px; color:var(--orange); font-size:13px; font-weight:700; }
+.widget-intro h1 { margin:0 0 10px; font-size:clamp(29px,4vw,42px); line-height:1.2; letter-spacing:-.055em; }
+.widget-intro > span { color:var(--muted); font-size:15px; }
+.widget-grid { display:flex; align-items:flex-start; flex-wrap:wrap; gap:34px; }
+.widget-preview h2 { margin:0 0 14px; font-size:13px; color:var(--muted); font-weight:650; }
+.widget-card { position:relative; display:flex; flex-direction:column; overflow:hidden; border:1px solid #e8e5dd; border-radius:25px; background:#fff9f4; box-shadow:0 14px 36px rgba(56,43,30,.07); color:var(--ink); text-decoration:none; transition:transform 180ms ease,box-shadow 180ms ease; }
+.widget-card:hover { transform:translateY(-3px); box-shadow:0 18px 40px rgba(56,43,30,.11); }
+.widget-card:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+.widget-date { display:block; color:var(--orange); font-weight:750; letter-spacing:-.025em; }
+.widget-title { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; word-break:keep-all; overflow-wrap:anywhere; letter-spacing:-.045em; }
+.widget-read { display:block; color:var(--orange); font-weight:700; }
+.widget-card--small { width:190px; height:190px; padding:20px; }
+.widget-card--small .widget-date { font-size:11px; margin-bottom:9px; }
+.widget-card--small .widget-title { position:relative; z-index:1; max-width:145px; font-size:17px; line-height:1.27; -webkit-line-clamp:3; }
+.widget-card--small .widget-read { position:relative; z-index:2; margin-top:auto; font-size:10px; }
+.widget-card--small img { position:absolute; right:-8px; bottom:-16px; width:91px; height:91px; object-fit:contain; }
+.widget-card--medium { width:min(100%,420px); min-width:min(420px,calc(100vw - 56px)); height:190px; padding:22px 24px; background:#f1f5f3; }
+.widget-copy { display:flex; flex-direction:column; align-items:flex-start; max-width:60%; height:100%; }
+.widget-card--medium .widget-date { font-size:12px; margin-bottom:9px; }
+.widget-card--medium .widget-title { font-size:21px; line-height:1.32; -webkit-line-clamp:3; }
+.widget-card--medium .widget-read { margin-top:auto; padding:7px 11px; border-radius:7px; background:white; color:#3c635b; font-size:11px; }
+.widget-card--medium img { position:absolute; width:170px; height:170px; right:0; bottom:-12px; object-fit:contain; }
+.widget-footnote { margin:48px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
+body.embed-mode { background:transparent; }
+.embed-mode .widget-page { padding:0; margin:0; max-width:none; }
+.embed-mode .widget-header,.embed-mode .widget-intro,.embed-mode .widget-preview h2,.embed-mode .widget-footnote { display:none; }
+.embed-mode .widget-grid { gap:0; }
+.embed-mode.size-small .widget-preview--medium,.embed-mode.size-medium .widget-preview--small { display:none; }
+.embed-mode .widget-card { box-shadow:none; }
+@media (max-width:620px) { .widget-page { padding:20px 20px 60px; } .widget-intro { margin:38px 0 28px; } .widget-grid { gap:28px; } .widget-card--medium { min-width:0; width:min(420px,calc(100vw - 40px)); } }
+@media (prefers-reduced-motion:reduce) { .widget-card { transition:none; } }

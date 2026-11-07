@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11월 메인 일러스트 검토 · N년전오늘</title>
+<style>
+:root{font-family:system-ui,"Apple SD Gothic Neo",sans-serif;color:#242b2b;background:#fafaf9}*{box-sizing:border-box}body{margin:0;padding:24px}main{max-width:1200px;margin:auto}h1{font-size:clamp(24px,3vw,36px);letter-spacing:-.05em}p{color:#66716d;line-height:1.6}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:20px;margin:28px 0}.tile{background:white;border:1px solid #e5e8e6;border-radius:14px;overflow:hidden}.art{aspect-ratio:3/2;background-size:200% 400%;background-repeat:no-repeat;background-color:#e5e8e8}.label{padding:14px 16px 18px}.label small{color:#a2462f;font-weight:700}.label h2{font-size:16px;line-height:1.4;margin:7px 0 0;letter-spacing:-.025em;word-break:keep-all}.back{color:#a2462f}
+</style></head><body><main><a class="back" href="/">← 앱으로 돌아가기</a><h1>11월 메인 일러스트 · 검토용</h1><p>11월 8~30일의 메인 사건 23개입니다. 앱에서는 아직 오지 않은 날짜가 계속 잠겨 있습니다.</p><div class="gallery" id="gallery"></div></main><script src="../data/events.js"></script><script src="../illustration-map.js"></script><script>
+const gallery=document.getElementById('gallery');
+for(const day of window.EVENT_DATA.dates.filter(item=>item.month===11&&item.day>=8&&item.day<=30)){
+  const event=day.events.find(item=>item.id===day.featuredId)||day.events[0];
+  const art=novemberArtwork(event);
+  const tile=document.createElement('article');tile.className='tile';
+  const image=document.createElement('div');image.className='art';image.role='img';image.setAttribute('aria-label',event.title+' 일러스트');image.style.backgroundImage=`url('../${art.sheet}')`;image.style.backgroundPosition=`${art.panel%2?100:0}% ${Math.floor(art.panel/2)*100/3}%`;
+  const label=document.createElement('div');label.className='label';const date=document.createElement('small');date.textContent=`11월 ${day.day}일`;const title=document.createElement('h2');title.textContent=event.title;label.append(date,title);tile.append(image,label);gallery.append(tile);
+}
+</script></body></html>

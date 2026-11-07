@@ -5,6 +5,7 @@
   "scripts": {
     "data:import": "python3 scripts/extract_xlsx.py",
     "data:check": "python3 scripts/validate_data.py",
-    "build": "npm run data:import && npm run data:check"
+    "widget:data": "node scripts/build_widget_data.js",
+    "build": "npm run data:import && npm run data:check && npm run widget:data"
   }
 }
